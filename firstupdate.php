@@ -1,7 +1,7 @@
 <?php
-	// GOAL:seleziona dalla tabella pagamenti le colonne id, status e price di tutti i pagamenti con price superiore a 600, stampa il risultato in una lista non ordinata
+	//Prendo il valore dall'esterno con un GET. GLielo passo nell'url con qualcosa del tipo localhost?price=10
+	$price = $_GET["price"];
 
-	
 	$servername = "localhost";
 	$username = "root";
 	$password = "root";
@@ -17,10 +17,15 @@
 	}
 
 	// query creation
+	// sintassi base da w3 school per l'update  
+	// UPDATE table_name
+	// SET column1 = value1, column2 = value2, ...
+	// WHERE condition;
+
 	$qry = "
-					SELECT id, status, price
-						FROM pagamenti
-							WHERE price > 600
+			UPDATE pagamenti
+			SET price = " . $price . "
+			WHERE status LIKE 'pending';
 	 ";
 
 	$result = $conn->query($qry);
@@ -29,18 +34,10 @@
 	
 	//var_dump($result); In alternativa a var_dump a volte (a seconda di cosa si stampa) può essere più chiaro/semplice usare print_r()
 
-	if($result && $result->num_rows > 0){
-
-		echo "<ul>";
-
-		while($row = $result->fetch_assoc()){
-			echo "<li>";
-			echo "ID: " . $row["id"] . " Status: " . $row["status"] . " Price: " . $row["price"];
-			echo "</li>";
-		}
-
-		echo "</ul>";
-
+	if($result){
+		echo "ok";
+	} else {
+		echo "An error has occured";
 	}
 	// chiudi la connessione
 	$conn->close();
